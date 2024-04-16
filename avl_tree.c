@@ -32,16 +32,32 @@ int main() {
 	Node *head = NULL;
 
 	head = insert_node(head, 2);
-	head = insert_node(head, 1);
-	head = insert_node(head, 7);
-	head = insert_node(head, 4);
-	head = insert_node(head, 5);
-	head = insert_node(head, 3);
-	head = insert_node(head, 8);
-
 	print_tree(head);
+	printf("\n");
+	head = insert_node(head, 1);
+	print_tree(head);
+	printf("\n");
+	head = insert_node(head, 7);
+	print_tree(head);
+	printf("\n");
+	head = insert_node(head, 4);
+	print_tree(head);
+	printf("\n");
+	head = insert_node(head, 5);
+	print_tree(head);
+	printf("\n");
+	head = insert_node(head, 3);
+	print_tree(head);
+	printf("\n");
+	head = insert_node(head, 8);
+	print_tree(head);
+	printf("\n");
+	head = insert_node(head, 9);
+	print_tree(head);
+	printf("\n");
 
-	head = delete_node(head, 3);
+
+	head = delete_node(head, 4);
 
 	printf("\nAfter delete\n");
 
@@ -106,7 +122,7 @@ int get_balance(Node *node) {
 
 Node * right_rotate(Node *node) {
 	Node *temp_one = node->left;
-	Node *temp_two = node->right;
+	Node *temp_two = temp_one->right;
 
 	temp_one->right = node;
 	node->left = temp_two;
@@ -125,7 +141,7 @@ Node * left_rotate(Node *node) {
 	node->right = temp_two;
 
 	node->height = max(get_height(node->left), get_height(node->right)) + 1;
-        temp_one->height = max(get_height(temp_one->left), get_height(temp_one->right)) + 1;
+    temp_one->height = max(get_height(temp_one->left), get_height(temp_one->right)) + 1;
 
 	return temp_one;
 }
