@@ -22,11 +22,11 @@ Node * left_rotate(Node *node);
 
 Node * insert_node(Node *node, int value);
 
-Node * delete_node(Node *node, int value);
+Node * delete_node(Node *head, int value);
 
 Node * minimal_value_node(Node *node);
 
-void print_tree(Node *node);
+void print_tree(Node *head);
 
 int main() {
 	Node *head = NULL;
@@ -130,3 +130,66 @@ Node * left_rotate(Node *node) {
 	return temp_one;
 }
 
+Node * delete_node(Node *head, int value) {
+	if (head == NULL)
+		return head;
+
+	if (value < head->value)
+		head->left = delete_node(head->left, value);
+	else if (value > head->value)
+		head->right = delete_node(head->right, value);
+	else {
+		if ((head->left == NULL) || (head->right == NULL)) {
+			Node *temp = head->left ? head->left : head->right;
+			if (temp == NULL) {
+				temp = head;
+				head = NULL;
+			} else
+				*head = *temp;
+			free(temp);
+		} else { 
+			Node *temp = minimal_value_node(head->right);
+			head->value = temp->value;
+			head->right = delete_node(head->right, head->value);
+		}
+	}
+
+	if (head == NULL)
+		return head;
+
+	head->height = 1 + max(get_height(head->left), get_height(head->right));
+
+  	int balance = get_balance(head);
+  	if (balance > 1 && get_balance(head->left) >= 0)
+    	return right_rotate(head);
+
+  	if (balance > 1 && get_balance(head->left) < 0) {
+    	head->left = left_rotate(head->left);
+    	return right_rotate(head);
+  	}
+
+  	if (balance < -1 && get_balance(head->right) <= 0)
+    	return left_rotate(head);
+
+  	if (balance < -1 && get_balance(head->right) > 0) {
+    	head->right = right_rotate(head->right);
+    	return left_rotate(head);
+  	}
+  	return head;
+}
+
+Node * minimal_value_node(Node *node) {
+	Node *current = node;
+	while (current->left != NULL)
+    	current = current->left;
+
+  	return current;
+}
+
+void print_tree(Node *head) {
+	if (head != NULL) {
+    printf("%d ", head->value);
+    print_tree(head->left);
+    print_tree(head->right);
+  }
+}
